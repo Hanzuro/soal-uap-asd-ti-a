@@ -55,7 +55,7 @@
             arah (proyek galian mangkrak, jalur tikus, dan sebagainya), sehingga
             setiap jalan dicatat <strong>per arah</strong>. Kurir harus pulang
             lagi, jadi yang dicari adalah rute
-            <strong>titik pengantaran → tujuan → titik pengantaran</strong>,
+            <strong>titik pengantaran -&gt; tujuan -&gt; titik pengantaran</strong>,
             dengan jalur pergi dan jalur kembali dihitung sendiri-sendiri.
           </p>
           <p>
@@ -89,15 +89,15 @@
             <li>
               <strong>Graph berbobot per arah</strong>:
               <code>addAdjList(a, b, w)</code> hanya membuat jalan
-              <code>a → b</code> dengan waktu tempuh <code>w</code>. Jalan dua
+              <code>a -&gt; b</code> dengan waktu tempuh <code>w</code>. Jalan dua
               arah ditulis dua kali (bobot boleh berbeda, misalnya karena
               tanjakan atau macet). Jalan satu arah ditulis sekali.
             </li>
             <li>
               <strong>Jalur pergi</strong> adalah jalur
-              <code>a → b</code> dengan total bobot terkecil.
+              <code>a -&gt; b</code> dengan total bobot terkecil.
               <strong>Jalur kembali</strong> adalah jalur
-              <code>b → a</code> dengan total bobot terkecil. Keduanya dicari
+              <code>b -&gt; a</code> dengan total bobot terkecil. Keduanya dicari
               terpisah, jadi rutenya bisa berbeda, dan keduanya harus ada.
             </li>
             <li>
@@ -148,13 +148,13 @@ public class Graph {
             </li>
             <li>
               <code>addAdjList(char a, char b, int bobot)</code>: membuat jalan
-              <strong>satu arah</strong> <code>a → b</code> berbobot
+              <strong>satu arah</strong> <code>a -&gt; b</code> berbobot
               <code>bobot</code>. Jika salah satu vertex belum ada, tambahkan
               dulu dengan <code>addVertex</code>.
             </li>
             <li>
               <code>bestRoute(char a, char b)</code>: mencari jalur pergi
-              <code>a → b</code> dan jalur kembali <code>b → a</code> dengan
+              <code>a -&gt; b</code> dan jalur kembali <code>b -&gt; a</code> dengan
               <em>algoritma Dijkstra</em> berbasis array (tanpa
               <em>priority queue</em>), lalu <strong>mencetak</strong> hasilnya
               satu baris diikuti baris baru. Label
