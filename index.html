@@ -1,0 +1,2430 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>X-Press - Studi Kasus Jalur Pergi-Pulang</title>
+  <link rel="stylesheet" href="soal.css">
+  <script src="soal.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="navbar" aria-label="Navigasi halaman">
+      <button class="nav-link active" type="button" data-page="beranda">Beranda</button>
+      <button class="nav-link" type="button" data-page="requested">Requested File</button>
+      <button class="nav-link" type="button" data-page="testcase">Test Case</button>
+    </nav>
+
+    <header class="hero">
+      <h1>Studi Kasus: <span>Jalur Pergi-Pulang</span> X-Press</h1>
+      <p>Randy kurir COD (alias <em>Clash on Delivery</em>) kembali panik: X-Hub-nya error lagi, dan gajinya terus terpotong. Mari kita selamatkan.</p>
+      <div><span class="pill" id="clk">08:00</span><span class="pill">LV 2 RANDY 0/100</span><span class="pill" id="pay">Rp1.000.000 / Rp1.000.000</span></div>
+    </header>
+
+    <main>
+      <section class="page active" id="page-beranda">
+
+        <p style="margin: 0 0 6px">
+          <img
+            class="poster"
+            src="img/COD_poster.png"
+            alt="Poster Clash On Delivery: Randy terjepit di tengah kerumunan"
+            width="900"
+          />
+        </p>
+        <h2 class="sec"><span>1. Deskripsi</span></h2>
+        <section class="card dark rv">
+          <img
+            class="rimg"
+            src="img/Randy_neutral.png"
+            alt="Randy, kurir COD X-Press"
+            width="170"
+            loading="lazy"
+          />
+          <p>
+            Kamu adalah programmer Java yang sebelumnya sudah mengembangkan
+            beberapa program untuk perusahaan ekspedisi
+            <strong>X-Press</strong>. Temanmu, <strong>Randy</strong>, baru
+            diterima sebagai kurir spesialis divisi
+            <strong>Cash On Delivery</strong>. Suatu hari ia datang kalang
+            kabut: aplikasi <strong>X-Hub</strong> miliknya mengalami
+            <em>bug</em> parah!
+          </p>
+          <p>
+            X-Hub merekomendasikan jalur terbaik memakai ADT
+            <em>Graph</em> berbobot. Sebagian jalan hanya bisa dilewati satu
+            arah (proyek galian mangkrak, jalur tikus, dan sebagainya), sehingga
+            setiap jalan dicatat <strong>per arah</strong>. Kurir harus pulang
+            lagi, jadi yang dicari adalah rute
+            <strong>titik pengantaran â†’ tujuan â†’ titik pengantaran</strong>,
+            dengan jalur pergi dan jalur kembali dihitung sendiri-sendiri.
+          </p>
+          <p>
+            Sebelum mencari jalur terbaik, sistem wajib menelusuri semua titik
+            yang bisa dijangkau secara <strong>BFS</strong>.
+          </p>
+          <p style="margin: 8px 0">
+            <img
+              class="gif"
+              src="https://img.itch.zone/aW1nLzI4MzAwNTgxLmdpZg==/original/O%2FfTpJ.gif"
+              alt="Animasi Randy mengantar paket"
+              width="430"
+            />
+          </p>
+          <p class="hl">
+            Tugasmu: perbaiki sistem rekomendasi jalur milik Randy yang malang
+            itu!
+          </p>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>2. Definisi</span></h2>
+        <section class="card rv">
+          <img
+            class="rimg sm"
+            src="img/Randy_Emoji_Default%20Smile.png"
+            alt="Randy tersenyum percaya diri"
+            width="170"
+            loading="lazy"
+          />
+          <ul>
+            <li>
+              <strong>Graph berbobot per arah</strong>:
+              <code>addAdjList(a, b, w)</code> hanya membuat jalan
+              <code>a â†’ b</code> dengan waktu tempuh <code>w</code>. Jalan dua
+              arah ditulis dua kali (bobot boleh berbeda, misalnya karena
+              tanjakan atau macet). Jalan satu arah ditulis sekali.
+            </li>
+            <li>
+              <strong>Jalur pergi</strong> adalah jalur
+              <code>a â†’ b</code> dengan total bobot terkecil.
+              <strong>Jalur kembali</strong> adalah jalur
+              <code>b â†’ a</code> dengan total bobot terkecil. Keduanya dicari
+              terpisah, jadi rutenya bisa berbeda, dan keduanya harus ada.
+            </li>
+            <li>
+              <strong>Indeks vertex</strong> mengikuti urutan masuk ke graph
+              (urutan input), bukan urutan alfabet. Vertex pertama berindeks
+              <code>0</code>.
+            </li>
+            <li>
+              <strong>BFS</strong> dimulai dari vertex berindeks <code>0</code>,
+              mengikuti arah jalan. Tetangga dikunjungi dari
+              <strong>indeks terkecil</strong> ke terbesar. Hanya vertex yang
+              terjangkau yang dicetak.
+            </li>
+            <li>
+              Jalur pergi dan jalur kembali pada setiap query
+              <strong>dijamin tunggal</strong> (tidak ada dua jalur dengan total
+              bobot terkecil yang sama).
+            </li>
+          </ul>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>3. Operasi yang Harus Dibuat</span></h2>
+        <section class="card rv">
+          <!-- <img class="rimg" src="img/Randy_confident.png" alt="Randy berpikir sambil tersenyum" width="170" loading="lazy"> -->
+          <p>
+            Kamu mengisi <code>Graph.java</code> dan
+            <code>Queue.java</code> (keduanya diberikan kosong), serta
+            melengkapi bagian <code>TODO</code> pada <code>Main.java</code>.
+            Rancang atributnya sendiri (disarankan <em>adjacency matrix</em>,
+            maksimum 26 vertex). Kelas <code>Graph</code> wajib memiliki kontrak
+            berikut:
+          </p>
+          <pre class="cb">
+public class Graph {
+    public Graph()                               // konstruktor tanpa parameter
+    public void addVertex(char a)
+    public void addAdjList(char a, char b, int bobot)
+    public void bestRoute(char a, char b)
+    public void bfs()
+}</pre
+          >
+          <ol>
+            <li>
+              <code>addVertex(char a)</code>: menambah vertex
+              <code>a</code> pada indeks <code>size</code>, lalu menaikkan
+              <code>size</code>. Jika graph penuh (26 vertex), vertex tidak
+              ditambahkan.
+            </li>
+            <li>
+              <code>addAdjList(char a, char b, int bobot)</code>: membuat jalan
+              <strong>satu arah</strong> <code>a â†’ b</code> berbobot
+              <code>bobot</code>. Jika salah satu vertex belum ada, tambahkan
+              dulu dengan <code>addVertex</code>.
+            </li>
+            <li>
+              <code>bestRoute(char a, char b)</code>: mencari jalur pergi
+              <code>a â†’ b</code> dan jalur kembali <code>b â†’ a</code> dengan
+              <em>algoritma Dijkstra</em> berbasis array (tanpa
+              <em>priority queue</em>), lalu <strong>mencetak</strong> hasilnya
+              satu baris diikuti baris baru. Label
+              <code>Jalur Terbaik dari ... : </code> dicetak oleh
+              <code>Main</code>.
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kondisi</th>
+                    <th>Yang dicetak</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>a</code> dan <code>b</code> sama</td>
+                    <td>Satu vertex saja, contoh <code>C</code></td>
+                  </tr>
+                  <tr>
+                    <td>Jalur pergi <strong>dan</strong> kembali ada</td>
+                    <td>
+                      Rantai pergi-pulang, titik tujuan ditulis sekali, dipisah
+                      <code> -&gt; </code>. Contoh:
+                      <code>A -&gt; B -&gt; E -&gt; D -&gt; A</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Salah satunya (atau keduanya) tidak ada</td>
+                    <td><code>Jalur Pergi/Kembali tidak ditemukan!</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </li>
+            <li>
+              <code>bfs()</code>: menelusuri graph secara
+              <strong>Breadth-First</strong> dari indeks <code>0</code> memakai
+              <code>Queue</code> buatanmu sendiri.
+              <ol>
+                <li>
+                  Tandai vertex berindeks <code>0</code> sebagai
+                  <code>visited</code>, cetak, lalu masukkan ke <em>queue</em>.
+                </li>
+                <li>
+                  Selama <em>queue</em> belum kosong, ambil satu vertex
+                  <code>v1</code>.
+                </li>
+                <li>
+                  Kunjungi <strong>semua</strong> tetangga <code>v1</code> yang
+                  belum dikunjungi dari indeks terkecil: tandai
+                  <code>visited</code>, cetak, masukkan ke <em>queue</em>.
+                </li>
+                <li>
+                  Setelah <em>queue</em> kosong, cetak baris baru dan kembalikan
+                  semua <code>visited</code> menjadi <code>false</code>.
+                </li>
+              </ol>
+              Aturan cetak: vertex pertama tanpa awalan, vertex berikutnya
+              diawali <code> -&gt; </code>, tanpa panah atau spasi di akhir
+              baris.
+            </li>
+          </ol>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>4. Format Input dan Output</span></h2>
+        <section class="card rv">
+          <p><strong>Format Input:</strong></p>
+          <ul>
+            <li>
+              Baris 1: tiga bilangan bulat <code>N M Q</code> (jumlah vertex,
+              jumlah jalan, jumlah query).
+            </li>
+            <li>
+              Baris 2: <em>N</em> vertex dipisahkan spasi,
+              <strong>sesuai urutan penambahan</strong>.
+            </li>
+            <li>
+              Baris 3 sampai <em>M+2</em>: <code>a b bobot</code>, yaitu jalan
+              satu arah dari <code>a</code> ke <code>b</code>.
+            </li>
+            <li>
+              Baris <em>M+3</em> sampai <em>M+Q+2</em>: <code>a b</code>, yaitu
+              titik pengantaran dan titik tujuan.
+            </li>
+          </ul>
+          <p><strong>Format Output:</strong></p>
+          <ul>
+            <li>
+              Baris 1: <code>BFS : </code> diikuti hasil BFS dalam satu baris.
+            </li>
+            <li>
+              Baris 2 sampai <em>Q+1</em>:
+              <code>Jalur Terbaik dari a dan b : </code> diikuti rantai
+              pergi-pulang, atau
+              <code>Jalur Pergi/Kembali tidak ditemukan!</code>.
+            </li>
+          </ul>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>5. Batasan (Constraints)</span></h2>
+        <section class="card rv">
+          <img
+            class="rimg sm"
+            src="img/Randy_dizzy.png"
+            alt="Randy pusing melihat batasan"
+            width="170"
+            loading="lazy"
+          />
+          <ul>
+            <li>
+              <code>1 â‰¤ N â‰¤ 26</code>, <code>0 â‰¤ M â‰¤ N(N-1)</code>,
+              <code>1 â‰¤ Q â‰¤ 20</code>, bobot <code>1 â‰¤ w â‰¤ 100</code>.
+            </li>
+            <li>
+              Vertex berupa <strong>satu huruf kapital</strong> dan unik. Tidak
+              ada <em>self-loop</em> maupun jalan ganda untuk pasangan arah yang
+              sama. Semua vertex pada jalan dan query dijamin terdaftar. Query
+              boleh memakai <code>a</code> sama dengan <code>b</code>.
+            </li>
+            <li>Graph <strong>belum tentu terhubung</strong>.</li>
+            <li>
+              Struktur kelas dipisah ketat menjadi 3 berkas:
+              <code>Graph.java</code>, <code>Queue.java</code>,
+              <code>Main.java</code>.
+            </li>
+            <li>
+              Soal dikerjakan <strong>from scratch</strong>. Dilarang memakai
+              library bawaan Java seperti <code>ArrayList</code>,
+              <code>LinkedList</code>, <code>HashMap</code>,
+              <code>PriorityQueue</code>, <code>java.util.Stack</code>,
+              <code>java.util.Queue</code>, <code>java.util.Arrays</code>, dan
+              <code>java.util.Collections</code>.
+              <code>java.util.Scanner</code> hanya boleh di
+              <code>Main.java</code>.
+            </li>
+            <li>
+              Pastikan output sesuai spesifikasi spasi (<code>BFS : </code>,
+              <code> -&gt; </code>, tanpa spasi tersisa di akhir baris) agar
+              lulus pengujian VPL.
+            </li>
+          </ul>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>6. Contoh Input dan Output</span></h2>
+        <section class="card rv">
+          <div class="io">
+            <div>
+              <span class="tag">Contoh Input 1</span>
+              <pre class="cb" id="in1">
+5 10 2
+A B C D E
+A B 2
+B A 3
+A C 6
+C A 4
+B D 3
+D B 6
+C D 1
+D C 2
+D E 4
+E D 6
+A E
+B C</pre
+              >
+            </div>
+            <div>
+              <span class="tag">Contoh Output 1</span>
+              <pre class="cb">
+BFS : A -&gt; B -&gt; C -&gt; D -&gt; E
+Jalur Terbaik dari A dan E : A -&gt; B -&gt; D -&gt; E -&gt; D -&gt; C -&gt; A
+Jalur Terbaik dari B dan C : B -&gt; D -&gt; C -&gt; A -&gt; B</pre
+              >
+            </div>
+          </div>
+          <div class="io">
+            <div>
+              <span class="tag">Contoh Input 2</span>
+              <pre class="cb" id="in2">
+6 7 3
+S A B C D E
+S A 4
+A B 3
+B A 3
+S C 9
+C B 2
+D E 5
+E D 5
+S B
+S D
+E D</pre
+              >
+            </div>
+            <div>
+              <span class="tag">Contoh Output 2</span>
+              <pre class="cb">
+BFS : S -&gt; A -&gt; C -&gt; B
+Jalur Terbaik dari S dan B : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari S dan D : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari E dan D : E -&gt; D -&gt; E</pre
+              >
+            </div>
+          </div>
+          <div class="io">
+            <div>
+              <span class="tag">Contoh Input 3</span>
+              <pre class="cb" id="in3">
+5 7 3
+A B C D E
+A E 10
+E A 1
+A B 2
+B C 2
+C D 2
+D E 2
+B D 7
+A E
+C C
+B E</pre
+              >
+            </div>
+            <div>
+              <span class="tag">Contoh Output 3</span>
+              <pre class="cb">
+BFS : A -&gt; B -&gt; E -&gt; C -&gt; D
+Jalur Terbaik dari A dan E : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; A
+Jalur Terbaik dari C dan C : C
+Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
+              >
+            </div>
+          </div>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>7. Penjelasan Contoh</span></h2>
+        <section class="card rv">
+          <div class="ex">
+            <p>
+              <strong>Contoh 1</strong> (<code>A B C D E</code> = indeks 0
+              sampai 4)
+            </p>
+            <div class="viz" data-src="in1"></div>
+            <ul>
+              <li>
+                <strong>BFS</strong>: <code>A</code> mengunjungi
+                <code>B</code> dan <code>C</code> lebih dulu, lalu
+                <code>D</code>, lalu <code>E</code>.
+              </li>
+              <li>
+                Query <code>A E</code>: pergi
+                <code>A -&gt; B -&gt; D -&gt; E</code> berbobot 2 + 3 + 4 = 9
+                (lebih murah dari <code>A -&gt; C -&gt; D -&gt; E</code> = 11).
+                Kembali <code>E -&gt; D -&gt; C -&gt; A</code> berbobot 6 + 2 +
+                4 = 12 (lebih murah dari
+                <code>E -&gt; D -&gt; B -&gt; A</code> = 15). Rute kembali
+                <strong>berbeda</strong> dari rute pergi.
+              </li>
+              <li>
+                Query <code>B C</code>: pergi <code>B -&gt; D -&gt; C</code> =
+                5, kembali <code>C -&gt; A -&gt; B</code> = 4 + 2 = 6 (lebih
+                murah dari <code>C -&gt; D -&gt; B</code> = 7).
+              </li>
+            </ul>
+          </div>
+          <div class="ex">
+            <img
+              class="rimg sm"
+              src="img/Randy_emoji_sad.png"
+              alt="Randy sedih karena jalur tidak ditemukan"
+              width="170"
+              loading="lazy"
+            />
+            <p><strong>Contoh 2</strong> (<code>S A B C D E</code>)</p>
+            <div class="viz" data-src="in2"></div>
+            <ul>
+              <li>
+                <code>S -&gt; A</code> dan <code>S -&gt; C</code> adalah jalan
+                <strong>satu arah</strong>. <code>D</code> dan
+                <code>E</code> berada di komponen lain sehingga tidak pernah
+                tercetak oleh BFS.
+              </li>
+              <li>
+                Query <code>S B</code>: pergi ada (<code
+                  >S -&gt; A -&gt; B</code
+                >
+                = 7), tetapi kembali tidak ada karena tidak ada jalan menuju
+                <code>S</code>. Hasilnya
+                <code>Jalur Pergi/Kembali tidak ditemukan!</code>.
+              </li>
+              <li>
+                Query <code>S D</code>: kedua komponen tidak terhubung. Query
+                <code>E D</code>: pergi 5 dan kembali 5, rantainya
+                <code>E -&gt; D -&gt; E</code>.
+              </li>
+            </ul>
+          </div>
+          <div class="ex">
+            <p><strong>Contoh 3</strong> (<code>A B C D E</code>)</p>
+            <div class="viz" data-src="in3"></div>
+            <ul>
+              <li>
+                Jalur dengan total bobot terkecil belum tentu punya vertex
+                paling sedikit. Query <code>A E</code>: jalan langsung
+                <code>A -&gt; E</code> berbobot 10 kalah dari
+                <code>A -&gt; B -&gt; C -&gt; D -&gt; E</code> = 8. Kembali
+                langsung <code>E -&gt; A</code> = 1.
+              </li>
+              <li>
+                Query <code>C C</code>: asal dan tujuan sama, cukup cetak
+                <code>C</code>.
+              </li>
+              <li>
+                Query <code>B E</code>: pergi
+                <code>B -&gt; C -&gt; D -&gt; E</code> = 6 (lebih murah dari
+                <code>B -&gt; D -&gt; E</code> = 9), kembali
+                <code>E -&gt; A -&gt; B</code> = 3.
+              </li>
+            </ul>
+          </div>
+        </section>
+        <p class="end">
+          <img
+            class="big"
+            src="img/Randy_Emoji_Super%20Happy.png"
+            alt="Randy bahagia, gajinya aman"
+            width="50%"
+            loading="lazy"
+          /><br /><span
+            >Selamat mengerjakan, semoga gaji Randy aman bulan ini!</span
+          >
+        </p>
+      
+      </section>
+
+      <section class="page" id="page-requested">
+
+        <hr class="sp" />
+        <h2 class="sec"><span>8. Berkas yang Diberikan</span></h2>
+        <section class="card rv">
+          <p>
+            Kamu menerima tiga berkas. Ketiganya wajib dikumpulkan ke VPL (<em
+              >requested files</em
+            >): <code>Graph.java</code>, <code>Queue.java</code>, dan
+            <code>Main.java</code>.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Berkas</th>
+                <th>Kondisi</th>
+                <th>Tugasmu</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Graph.java</code></td>
+                <td>Kosong</td>
+                <td>Implementasikan seluruh <em>Graph</em></td>
+              </tr>
+              <tr>
+                <td><code>Queue.java</code></td>
+                <td>Kosong</td>
+                <td>Rancang <em>Queue</em> untuk BFS</td>
+              </tr>
+              <tr>
+                <td><code>Main.java</code></td>
+                <td>Setengah jadi</td>
+                <td>Lengkapi dua <code>TODO</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="tabwrap">
+            <div class="tabs">
+              <button class="on">Graph.java</button
+              ><button class="">Queue.java</button
+              ><button class="">Main.java</button>
+            </div>
+            <div class="tp on">
+              <p>
+                <strong>Kosong.</strong> Tulis atribut, konstruktor
+                <code>Graph()</code>, serta method <code>addVertex</code>,
+                <code>addAdjList</code>, <code>bestRoute</code>, dan
+                <code>bfs</code> sesuai kontrak pada Bagian 3.
+              </p>
+              <pre class="cb">
+public class Graph {
+    // TODO: tulis atribut, konstruktor Graph(), dan semua method di sini
+}</pre
+              >
+            </div>
+            <div class="tp">
+              <p>
+                <strong>Kosong.</strong> Rancang sendiri <em>queue</em>-nya
+                (from scratch) lalu pakai di <code>bfs()</code>. Nama method dan
+                bentuk kelasnya bebas.
+              </p>
+              <pre class="cb">
+public class Queue {
+    // TODO: rancang sendiri struktur data Queue (from scratch) di sini
+}</pre
+              >
+            </div>
+            <div class="tp">
+              <p>
+                <strong>Setengah jadi.</strong> Pembacaan <code>N M Q</code> dan
+                daftar vertex sudah ada. Lengkapi dua bagian <code>TODO</code>.
+                Format label cetak harus persis sesuai Bagian 4.
+              </p>
+              <pre class="cb">
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Graph g = new Graph();
+
+        int n = sc.nextInt(); // jumlah vertex
+        int m = sc.nextInt(); // jumlah jalan
+        int q = sc.nextInt(); // jumlah query
+
+        // Baca N vertex sesuai urutan input
+        for (int i = 0; i &lt; n; i++) {
+            char v = sc.next().charAt(0);
+            g.addVertex(v);
+        }
+
+        // TODO 1: baca M jalan, masing-masing &quot;a b bobot&quot;,
+        //         lalu masukkan ke graph dengan g.addAdjList(...)
+
+
+        // Cetak hasil BFS
+        System.out.print(&quot;BFS : &quot;);
+        g.bfs();
+
+        // TODO 2: untuk setiap Q query &quot;a b&quot;:
+        //         - baca a dan b
+        //         - cetak label &quot;Jalur Terbaik dari a dan b : &quot; (tanpa baris baru)
+        //         - panggil g.bestRoute(a, b)
+
+
+        sc.close();
+    }
+}</pre
+              >
+            </div>
+          </div>
+          <p>
+            Selain <code>java.util.Scanner</code> di <code>Main.java</code>,
+            jangan menambah <code>import</code> apa pun.
+          </p>
+        </section>
+        
+      </section>
+
+      <section class="page" id="page-testcase">
+
+        <hr class="sp" />
+        <h2 class="sec"><span>9. Kasus Uji</span></h2>
+        <section class="card rv">
+          <p>
+            Ada <strong>11 kasus uji</strong> dengan tingkat kesulitan tinggi.
+            Pada setiap query, jalur pergi dan jalur kembali dijamin tunggal.
+            Klik judul kasus untuk membuka input dan output.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>N M Q</th>
+                <th>Tingkat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Urutan Bukan Alfabet</td>
+                <td><code>8 22 6</code></td>
+                <td>LV 3</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jalan Memutar</td>
+                <td><code>7 16 6</code></td>
+                <td>LV 3</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Jalan Satu Arah</td>
+                <td><code>7 8 6</code></td>
+                <td>LV 4</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Pergi Beda Rute dengan Kembali</td>
+                <td><code>6 14 6</code></td>
+                <td>LV 4</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Terpisah dan Terisolasi</td>
+                <td><code>9 10 6</code></td>
+                <td>LV 4</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Vertex Nol Buntu</td>
+                <td><code>7 18 6</code></td>
+                <td>LV 4</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Sendirian</td>
+                <td><code>1 0 2</code></td>
+                <td>LV 2</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Dua Titik Satu Jalan</td>
+                <td><code>2 1 3</code></td>
+                <td>LV 3</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Ular Maksimum</td>
+                <td><code>26 50 6</code></td>
+                <td>LV 5</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Padat 26 Vertex</td>
+                <td><code>26 345 20</code></td>
+                <td>LV 5</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>Labirin Siklus</td>
+                <td><code>14 26 20</code></td>
+                <td>LV 5</td>
+              </tr>
+            </tbody>
+          </table>
+          <details class="tc" open>
+            <summary>
+              <span class="lv">LV 3</span> Kasus Uji 1: Urutan Bukan Alfabet
+              <small>N=8 M=22 Q=6</small>
+            </summary>
+            <p>
+              Indeks vertex mengikuti urutan input dan tetangga BFS diurutkan
+              menurut indeks, bukan huruf.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 1</span>
+                <pre class="cb">
+8 22 6
+R K T M B Z A Q
+R T 4
+T R 4
+R K 7
+K R 5
+R M 9
+M R 9
+T B 3
+B T 6
+K B 2
+B K 2
+M Z 5
+Z M 8
+B Z 4
+Z B 4
+Z A 6
+A Z 3
+B A 11
+A B 11
+T Q 16
+Q T 16
+A Q 2
+Q A 2
+R A
+A R
+K Q
+Q R
+T T
+M B</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 1</span>
+                <pre class="cb">
+BFS : R -&gt; K -&gt; T -&gt; M -&gt; B -&gt; Q -&gt; Z -&gt; A
+Jalur Terbaik dari R dan A : R -&gt; T -&gt; B -&gt; Z -&gt; A -&gt; Z -&gt; B -&gt; K -&gt; R
+Jalur Terbaik dari A dan R : A -&gt; Z -&gt; B -&gt; K -&gt; R -&gt; T -&gt; B -&gt; Z -&gt; A
+Jalur Terbaik dari K dan Q : K -&gt; B -&gt; Z -&gt; A -&gt; Q -&gt; A -&gt; Z -&gt; B -&gt; K
+Jalur Terbaik dari Q dan R : Q -&gt; A -&gt; Z -&gt; B -&gt; K -&gt; R -&gt; T -&gt; B -&gt; Z -&gt; A -&gt; Q
+Jalur Terbaik dari T dan T : T
+Jalur Terbaik dari M dan B : M -&gt; Z -&gt; B -&gt; Z -&gt; M</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 3</span> Kasus Uji 2: Jalan Memutar
+              <small>N=7 M=16 Q=6</small>
+            </summary>
+            <p>
+              Edge langsung berbobot besar kalah dari rute panjang yang total
+              bobotnya lebih kecil.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 2</span>
+                <pre class="cb">
+7 16 6
+A B C D E F G
+A G 90
+G A 85
+A B 10
+B A 11
+B C 10
+C B 11
+C D 10
+D C 11
+D E 10
+E D 11
+E F 10
+F E 11
+F G 10
+G F 11
+B D 25
+D F 25
+A G
+G A
+B F
+C E
+A D
+F B</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 2</span>
+                <pre class="cb">
+BFS : A -&gt; B -&gt; G -&gt; C -&gt; D -&gt; F -&gt; E
+Jalur Terbaik dari A dan G : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari G dan A : G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G
+Jalur Terbaik dari B dan F : B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B
+Jalur Terbaik dari C dan E : C -&gt; D -&gt; E -&gt; D -&gt; C
+Jalur Terbaik dari A dan D : A -&gt; B -&gt; C -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari F dan B : F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 4</span> Kasus Uji 3: Jalan Satu Arah
+              <small>N=7 M=8 Q=6</small>
+            </summary>
+            <p>
+              Jalur pergi ada tetapi jalur kembali tidak ada (dan sebaliknya)
+              karena jalan satu arah.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 3</span>
+                <pre class="cb">
+7 8 6
+H I J K L M N
+H I 3
+I J 4
+J K 2
+K L 5
+L M 1
+M N 6
+J I 4
+N M 6
+H N
+I J
+H J
+N M
+L N
+J H</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 3</span>
+                <pre class="cb">
+BFS : H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N
+Jalur Terbaik dari H dan N : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari I dan J : I -&gt; J -&gt; I
+Jalur Terbaik dari H dan J : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari N dan M : N -&gt; M -&gt; N
+Jalur Terbaik dari L dan N : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari J dan H : Jalur Pergi/Kembali tidak ditemukan!</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 4</span> Kasus Uji 4: Pergi Beda Rute dengan
+              Kembali <small>N=6 M=14 Q=6</small>
+            </summary>
+            <p>Bobot asimetris: rute kembali bukan kebalikan rute pergi.</p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 4</span>
+                <pre class="cb">
+6 14 6
+A B C D E F
+A B 2
+B A 20
+B C 2
+C B 20
+C D 2
+D C 20
+D E 2
+E D 20
+E F 2
+F E 20
+F A 2
+A F 20
+A D 11
+D A 3
+A D
+B E
+D A
+C F
+F C
+A A</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 4</span>
+                <pre class="cb">
+BFS : A -&gt; B -&gt; D -&gt; F -&gt; C -&gt; E
+Jalur Terbaik dari A dan D : A -&gt; B -&gt; C -&gt; D -&gt; A
+Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; A -&gt; B
+Jalur Terbaik dari D dan A : D -&gt; A -&gt; B -&gt; C -&gt; D
+Jalur Terbaik dari C dan F : C -&gt; D -&gt; E -&gt; F -&gt; A -&gt; B -&gt; C
+Jalur Terbaik dari F dan C : F -&gt; A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F
+Jalur Terbaik dari A dan A : A</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 4</span> Kasus Uji 5: Terpisah dan Terisolasi
+              <small>N=9 M=10 Q=6</small>
+            </summary>
+            <p>
+              Graph tidak terhubung: BFS hanya mencetak komponen vertex 0, ada
+              vertex terisolasi.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 5</span>
+                <pre class="cb">
+9 10 6
+P Q R S T U V W X
+P Q 3
+Q P 3
+Q R 4
+R Q 4
+P R 9
+R P 9
+S T 5
+T S 5
+V W 2
+W X 3
+P R
+Q S
+S T
+U U
+U P
+V X</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 5</span>
+                <pre class="cb">
+BFS : P -&gt; Q -&gt; R
+Jalur Terbaik dari P dan R : P -&gt; Q -&gt; R -&gt; Q -&gt; P
+Jalur Terbaik dari Q dan S : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari S dan T : S -&gt; T -&gt; S
+Jalur Terbaik dari U dan U : U
+Jalur Terbaik dari U dan P : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari V dan X : Jalur Pergi/Kembali tidak ditemukan!</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 4</span> Kasus Uji 6: Vertex Nol Buntu
+              <small>N=7 M=18 Q=6</small>
+            </summary>
+            <p>
+              Vertex 0 hanya punya jalan masuk, sehingga BFS hanya mencetak satu
+              vertex.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 6</span>
+                <pre class="cb">
+7 18 6
+Z A B C D E F
+A Z 5
+B Z 3
+A B 7
+B A 4
+A C 2
+C A 9
+B D 6
+D B 5
+C D 3
+D C 3
+C E 8
+E C 2
+D F 4
+F D 10
+E F 2
+F E 6
+B E 12
+E B 12
+Z A
+A Z
+B F
+F B
+A E
+C D</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 6</span>
+                <pre class="cb">
+BFS : Z
+Jalur Terbaik dari Z dan A : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari A dan Z : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari B dan F : B -&gt; D -&gt; F -&gt; D -&gt; B
+Jalur Terbaik dari F dan B : F -&gt; D -&gt; B -&gt; D -&gt; F
+Jalur Terbaik dari A dan E : A -&gt; C -&gt; E -&gt; C -&gt; A
+Jalur Terbaik dari C dan D : C -&gt; D -&gt; C</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 2</span> Kasus Uji 7: Sendirian
+              <small>N=1 M=0 Q=2</small>
+            </summary>
+            <p>
+              Batas bawah: N = 1, M = 0, query dengan asal sama dengan tujuan.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 7</span>
+                <pre class="cb">
+1 0 2
+X
+X X
+X X</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 7</span>
+                <pre class="cb">
+BFS : X
+Jalur Terbaik dari X dan X : X
+Jalur Terbaik dari X dan X : X</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 3</span> Kasus Uji 8: Dua Titik Satu Jalan
+              <small>N=2 M=1 Q=3</small>
+            </summary>
+            <p>
+              Satu jalan satu arah antara dua vertex, dengan vertex 0 sebagai
+              asal.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 8</span>
+                <pre class="cb">
+2 1 3
+B A
+B A 1
+A B
+B A
+A A</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 8</span>
+                <pre class="cb">
+BFS : B -&gt; A
+Jalur Terbaik dari A dan B : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari B dan A : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari A dan A : A</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 5</span> Kasus Uji 9: Ular Maksimum
+              <small>N=26 M=50 Q=6</small>
+            </summary>
+            <p>
+              Total bobot hingga 5000: nilai INF yang terlalu kecil membuat
+              jawaban salah. Rantai terpanjang 26 vertex.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 9</span>
+                <pre class="cb">
+26 50 6
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+A B 100
+B A 100
+B C 100
+C B 100
+C D 100
+D C 100
+D E 100
+E D 100
+E F 100
+F E 100
+F G 100
+G F 100
+G H 100
+H G 100
+H I 100
+I H 100
+I J 100
+J I 100
+J K 100
+K J 100
+K L 100
+L K 100
+L M 100
+M L 100
+M N 100
+N M 100
+N O 100
+O N 100
+O P 100
+P O 100
+P Q 100
+Q P 100
+Q R 100
+R Q 100
+R S 100
+S R 100
+S T 100
+T S 100
+T U 100
+U T 100
+U V 100
+V U 100
+V W 100
+W V 100
+W X 100
+X W 100
+X Y 100
+Y X 100
+Y Z 100
+Z Y 100
+A Z
+Z A
+A M
+N Z
+Z Z
+H T</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 9</span>
+                <pre class="cb">
+BFS : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z
+Jalur Terbaik dari A dan Z : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z -&gt; Y -&gt; X -&gt; W -&gt; V -&gt; U -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari Z dan A : Z -&gt; Y -&gt; X -&gt; W -&gt; V -&gt; U -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z
+Jalur Terbaik dari A dan M : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari N dan Z : N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z -&gt; Y -&gt; X -&gt; W -&gt; V -&gt; U -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N
+Jalur Terbaik dari Z dan Z : Z
+Jalur Terbaik dari H dan T : H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 5</span> Kasus Uji 10: Padat 26 Vertex
+              <small>N=26 M=345 Q=20</small>
+            </summary>
+            <p>
+              Ukuran maksimum: N = 26, ratusan jalan, 20 query, urutan vertex
+              diacak.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 10</span>
+                <pre class="cb">
+26 345 20
+G Q X O B F V K J N Z M D I W U A C Y P T L E R S H
+Z E 75
+Z T 90
+I M 40
+E X 31
+B M 80
+C Y 6
+F T 26
+Q E 36
+E H 96
+O M 47
+U D 65
+S Q 99
+P Z 54
+N I 96
+C S 15
+X L 54
+B K 25
+T M 11
+W X 64
+W I 78
+F U 69
+Q L 76
+U V 99
+J Y 99
+V A 45
+I V 43
+E C 76
+H A 36
+I P 35
+K C 72
+W L 57
+R V 27
+L Q 15
+V S 11
+G I 18
+R U 37
+K Z 3
+Y U 7
+I X 48
+T G 31
+T J 25
+P Q 53
+A X 77
+H U 46
+Y P 97
+D B 17
+X W 65
+E T 13
+D K 56
+C K 3
+T N 14
+Q H 10
+O P 35
+N L 64
+M H 43
+C J 52
+W D 96
+K D 76
+G R 30
+H Q 63
+L C 39
+Q F 42
+H P 41
+D Y 44
+O F 63
+S D 64
+M Y 55
+J B 31
+O U 4
+Z L 77
+D W 87
+O Z 77
+L B 33
+C M 78
+S U 81
+E S 61
+R D 21
+W N 90
+D M 99
+C D 63
+W Z 54
+S G 7
+Y F 72
+P M 57
+Y W 65
+C U 91
+G T 50
+C E 50
+T C 37
+A M 6
+G A 34
+K G 59
+G F 98
+X Z 59
+O J 48
+R K 98
+C P 4
+N T 20
+I E 65
+I N 39
+I F 72
+S P 18
+M C 6
+T O 79
+N H 93
+H M 24
+O W 49
+A N 97
+Y N 56
+N Q 24
+B S 97
+E L 20
+N M 31
+W Q 99
+P L 22
+D L 64
+D I 58
+R F 53
+M Z 25
+S K 44
+G U 18
+N F 48
+B C 73
+U L 47
+G Y 81
+T P 72
+Y D 4
+T I 89
+B Z 83
+H L 30
+F J 89
+K I 55
+K M 69
+S C 98
+U S 3
+R X 26
+Z Q 97
+H G 22
+W U 51
+A V 27
+F L 16
+Y X 60
+U G 64
+J V 12
+S F 24
+K P 60
+L G 80
+E P 3
+D G 49
+B F 29
+H Y 68
+W B 35
+O I 77
+B E 92
+P R 60
+L W 77
+V G 81
+C F 59
+D R 38
+L V 88
+I G 83
+U F 82
+I R 90
+E U 100
+N P 83
+A B 11
+F Y 70
+B Q 95
+M E 46
+M P 11
+P V 95
+F P 8
+K H 14
+L H 67
+R E 81
+A Y 84
+X G 69
+B R 96
+Z X 75
+V U 21
+I U 24
+A T 97
+K F 48
+X U 82
+E R 67
+G N 93
+M J 28
+R G 63
+A H 48
+D Q 27
+C I 3
+Q M 16
+Y A 66
+P I 35
+P N 24
+A G 45
+B T 80
+F C 17
+O N 59
+L S 83
+O D 98
+U A 37
+P S 89
+P X 50
+M T 34
+W S 71
+O T 24
+L A 70
+J Z 4
+Z A 49
+S E 97
+E F 27
+F W 85
+A W 61
+E G 45
+J D 15
+K N 89
+M B 30
+J X 76
+T S 69
+A E 59
+W T 38
+Z U 35
+V X 97
+W Y 23
+G D 74
+J S 42
+F A 79
+A P 3
+I H 43
+X F 6
+N O 90
+S I 34
+Z P 19
+Y R 40
+Q W 9
+B D 17
+N G 10
+O G 81
+V W 65
+E O 11
+G K 100
+O Y 65
+L F 60
+R C 46
+M R 94
+C R 22
+Y J 12
+T A 2
+V P 25
+X C 39
+T Z 40
+O Q 46
+X D 77
+X Y 34
+O S 43
+H Z 81
+Q Z 74
+V D 5
+U J 23
+C X 1
+B G 22
+U O 86
+R P 32
+F I 65
+L T 97
+F Z 56
+B Y 53
+V C 50
+S M 34
+V K 42
+S V 36
+X K 47
+R W 70
+F Q 44
+G M 55
+S O 47
+Y V 44
+V N 8
+F D 96
+F K 32
+F E 36
+S W 4
+J L 71
+V O 35
+X Q 26
+L E 71
+L M 78
+M I 80
+E B 42
+C H 16
+Y T 62
+H F 86
+C G 47
+X R 49
+R N 49
+G J 35
+B I 67
+B J 74
+T W 20
+R Q 45
+K O 6
+J M 16
+P J 71
+O V 8
+A Z 41
+N U 73
+A D 26
+B P 1
+Q A 55
+M Q 52
+L P 45
+U Z 25
+R I 60
+R A 60
+H T 5
+Q P 79
+K W 17
+Z Y 42
+X B 34
+D J 68
+U P 12
+U B 77
+V M 7
+I T 7
+D V 36
+V L 17
+C W 41
+H D 18
+T F 94
+Q U 20
+W P 33
+O B 91
+C B 48
+O R 77
+Z C 73
+M G 93
+B U 45
+P G 38
+B N 36
+L U 49
+R B 14
+E D 25
+D Z 90
+Q D 82
+N M
+W L
+A K
+V Y
+N Z
+Y B
+Y C
+M P
+A M
+Z S
+Y R
+R A
+V W
+Q R
+I N
+T V
+U V
+F O
+W O
+A D</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 10</span>
+                <pre class="cb">
+BFS : G -&gt; F -&gt; K -&gt; J -&gt; N -&gt; M -&gt; D -&gt; I -&gt; U -&gt; A -&gt; Y -&gt; T -&gt; R -&gt; Q -&gt; Z -&gt; W -&gt; C -&gt; P -&gt; L -&gt; E -&gt; O -&gt; H -&gt; X -&gt; B -&gt; V -&gt; S
+Jalur Terbaik dari N dan M : N -&gt; T -&gt; A -&gt; M -&gt; C -&gt; I -&gt; T -&gt; N
+Jalur Terbaik dari W dan L : W -&gt; P -&gt; L -&gt; Q -&gt; W
+Jalur Terbaik dari A dan K : A -&gt; M -&gt; C -&gt; K -&gt; H -&gt; T -&gt; A
+Jalur Terbaik dari V dan Y : V -&gt; M -&gt; C -&gt; Y -&gt; J -&gt; V
+Jalur Terbaik dari N dan Z : N -&gt; T -&gt; A -&gt; M -&gt; C -&gt; K -&gt; Z -&gt; P -&gt; N
+Jalur Terbaik dari Y dan B : Y -&gt; D -&gt; B -&gt; F -&gt; C -&gt; Y
+Jalur Terbaik dari Y dan C : Y -&gt; J -&gt; M -&gt; C -&gt; Y
+Jalur Terbaik dari M dan P : M -&gt; C -&gt; P -&gt; I -&gt; T -&gt; A -&gt; M
+Jalur Terbaik dari A dan M : A -&gt; M -&gt; C -&gt; I -&gt; T -&gt; A
+Jalur Terbaik dari Z dan S : Z -&gt; U -&gt; S -&gt; W -&gt; Y -&gt; J -&gt; Z
+Jalur Terbaik dari Y dan R : Y -&gt; R -&gt; V -&gt; M -&gt; C -&gt; Y
+Jalur Terbaik dari R dan A : R -&gt; V -&gt; M -&gt; C -&gt; I -&gt; T -&gt; A -&gt; M -&gt; C -&gt; R
+Jalur Terbaik dari V dan W : V -&gt; S -&gt; W -&gt; Y -&gt; J -&gt; V
+Jalur Terbaik dari Q dan R : Q -&gt; M -&gt; C -&gt; R -&gt; Q
+Jalur Terbaik dari I dan N : I -&gt; T -&gt; N -&gt; G -&gt; I
+Jalur Terbaik dari T dan V : T -&gt; A -&gt; V -&gt; M -&gt; C -&gt; I -&gt; T
+Jalur Terbaik dari U dan V : U -&gt; J -&gt; V -&gt; U
+Jalur Terbaik dari F dan O : F -&gt; C -&gt; K -&gt; O -&gt; V -&gt; M -&gt; C -&gt; X -&gt; F
+Jalur Terbaik dari W dan O : W -&gt; T -&gt; A -&gt; M -&gt; C -&gt; K -&gt; O -&gt; U -&gt; S -&gt; W
+Jalur Terbaik dari A dan D : A -&gt; M -&gt; C -&gt; Y -&gt; D -&gt; Q -&gt; H -&gt; T -&gt; A</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">LV 5</span> Kasus Uji 11: Labirin Siklus
+              <small>N=14 M=26 Q=20</small>
+            </summary>
+            <p>
+              Graph jarang berisi banyak siklus dan jalan buntu, campuran query
+              yang ditemukan dan tidak.
+            </p>
+            <div class="io">
+              <div>
+                <span class="tag">Input 11</span>
+                <pre class="cb">
+14 26 20
+X Y L K W B F Z T N J R Q A
+J B 39
+Z K 3
+T F 40
+R Q 26
+X Y 84
+R L 5
+N L 3
+A Y 55
+B K 95
+B N 47
+Y N 43
+Q J 26
+X Z 29
+T R 94
+Q W 86
+F R 71
+J F 28
+N W 21
+F Z 30
+B F 100
+W F 26
+J Y 87
+Q Z 79
+K R 6
+K B 85
+Y F 81
+Y F
+A Q
+L A
+L B
+Y N
+N Q
+F Y
+N T
+K N
+Y W
+B W
+N T
+Y Z
+W Y
+Q X
+A W
+X N
+J X
+Y F
+Y A</pre
+                >
+              </div>
+              <div>
+                <span class="tag">Output 11</span>
+                <pre class="cb">
+BFS : X -&gt; Y -&gt; Z -&gt; F -&gt; N -&gt; K -&gt; R -&gt; L -&gt; W -&gt; B -&gt; Q -&gt; J
+Jalur Terbaik dari Y dan F : Y -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari A dan Q : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari L dan A : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari L dan B : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari Y dan N : Y -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari N dan Q : N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; B -&gt; N
+Jalur Terbaik dari F dan Y : F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y -&gt; F
+Jalur Terbaik dari N dan T : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari K dan N : K -&gt; B -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K
+Jalur Terbaik dari Y dan W : Y -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari B dan W : B -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; B
+Jalur Terbaik dari N dan T : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari Y dan Z : Y -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari W dan Y : W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y -&gt; N -&gt; W
+Jalur Terbaik dari Q dan X : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari A dan W : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari X dan N : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari J dan X : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari Y dan F : Y -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari Y dan A : Jalur Pergi/Kembali tidak ditemukan!</pre
+                >
+              </div>
+            </div>
+          </details>
+          <details class="tc">
+            <summary>
+              <span class="lv">VPL</span> <code>vpl_evaluate.cases</code>
+              <small>semua kasus uji, siap salin</small>
+            </summary>
+            <pre class="cb">
+Case = Kasus Uji 1
+input = 8 22 6
+R K T M B Z A Q
+R T 4
+T R 4
+R K 7
+K R 5
+R M 9
+M R 9
+T B 3
+B T 6
+K B 2
+B K 2
+M Z 5
+Z M 8
+B Z 4
+Z B 4
+Z A 6
+A Z 3
+B A 11
+A B 11
+T Q 16
+Q T 16
+A Q 2
+Q A 2
+R A
+A R
+K Q
+Q R
+T T
+M B
+output =BFS : R -&gt; K -&gt; T -&gt; M -&gt; B -&gt; Q -&gt; Z -&gt; A
+Jalur Terbaik dari R dan A : R -&gt; T -&gt; B -&gt; Z -&gt; A -&gt; Z -&gt; B -&gt; K -&gt; R
+Jalur Terbaik dari A dan R : A -&gt; Z -&gt; B -&gt; K -&gt; R -&gt; T -&gt; B -&gt; Z -&gt; A
+Jalur Terbaik dari K dan Q : K -&gt; B -&gt; Z -&gt; A -&gt; Q -&gt; A -&gt; Z -&gt; B -&gt; K
+Jalur Terbaik dari Q dan R : Q -&gt; A -&gt; Z -&gt; B -&gt; K -&gt; R -&gt; T -&gt; B -&gt; Z -&gt; A -&gt; Q
+Jalur Terbaik dari T dan T : T
+Jalur Terbaik dari M dan B : M -&gt; Z -&gt; B -&gt; Z -&gt; M
+
+Case = Kasus Uji 2
+input = 7 16 6
+A B C D E F G
+A G 90
+G A 85
+A B 10
+B A 11
+B C 10
+C B 11
+C D 10
+D C 11
+D E 10
+E D 11
+E F 10
+F E 11
+F G 10
+G F 11
+B D 25
+D F 25
+A G
+G A
+B F
+C E
+A D
+F B
+output =BFS : A -&gt; B -&gt; G -&gt; C -&gt; D -&gt; F -&gt; E
+Jalur Terbaik dari A dan G : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari G dan A : G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G
+Jalur Terbaik dari B dan F : B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B
+Jalur Terbaik dari C dan E : C -&gt; D -&gt; E -&gt; D -&gt; C
+Jalur Terbaik dari A dan D : A -&gt; B -&gt; C -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari F dan B : F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F
+
+Case = Kasus Uji 3
+input = 7 8 6
+H I J K L M N
+H I 3
+I J 4
+J K 2
+K L 5
+L M 1
+M N 6
+J I 4
+N M 6
+H N
+I J
+H J
+N M
+L N
+J H
+output =BFS : H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N
+Jalur Terbaik dari H dan N : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari I dan J : I -&gt; J -&gt; I
+Jalur Terbaik dari H dan J : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari N dan M : N -&gt; M -&gt; N
+Jalur Terbaik dari L dan N : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari J dan H : Jalur Pergi/Kembali tidak ditemukan!
+
+Case = Kasus Uji 4
+input = 6 14 6
+A B C D E F
+A B 2
+B A 20
+B C 2
+C B 20
+C D 2
+D C 20
+D E 2
+E D 20
+E F 2
+F E 20
+F A 2
+A F 20
+A D 11
+D A 3
+A D
+B E
+D A
+C F
+F C
+A A
+output =BFS : A -&gt; B -&gt; D -&gt; F -&gt; C -&gt; E
+Jalur Terbaik dari A dan D : A -&gt; B -&gt; C -&gt; D -&gt; A
+Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; A -&gt; B
+Jalur Terbaik dari D dan A : D -&gt; A -&gt; B -&gt; C -&gt; D
+Jalur Terbaik dari C dan F : C -&gt; D -&gt; E -&gt; F -&gt; A -&gt; B -&gt; C
+Jalur Terbaik dari F dan C : F -&gt; A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F
+Jalur Terbaik dari A dan A : A
+
+Case = Kasus Uji 5
+input = 9 10 6
+P Q R S T U V W X
+P Q 3
+Q P 3
+Q R 4
+R Q 4
+P R 9
+R P 9
+S T 5
+T S 5
+V W 2
+W X 3
+P R
+Q S
+S T
+U U
+U P
+V X
+output =BFS : P -&gt; Q -&gt; R
+Jalur Terbaik dari P dan R : P -&gt; Q -&gt; R -&gt; Q -&gt; P
+Jalur Terbaik dari Q dan S : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari S dan T : S -&gt; T -&gt; S
+Jalur Terbaik dari U dan U : U
+Jalur Terbaik dari U dan P : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari V dan X : Jalur Pergi/Kembali tidak ditemukan!
+
+Case = Kasus Uji 6
+input = 7 18 6
+Z A B C D E F
+A Z 5
+B Z 3
+A B 7
+B A 4
+A C 2
+C A 9
+B D 6
+D B 5
+C D 3
+D C 3
+C E 8
+E C 2
+D F 4
+F D 10
+E F 2
+F E 6
+B E 12
+E B 12
+Z A
+A Z
+B F
+F B
+A E
+C D
+output =BFS : Z
+Jalur Terbaik dari Z dan A : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari A dan Z : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari B dan F : B -&gt; D -&gt; F -&gt; D -&gt; B
+Jalur Terbaik dari F dan B : F -&gt; D -&gt; B -&gt; D -&gt; F
+Jalur Terbaik dari A dan E : A -&gt; C -&gt; E -&gt; C -&gt; A
+Jalur Terbaik dari C dan D : C -&gt; D -&gt; C
+
+Case = Kasus Uji 7
+input = 1 0 2
+X
+X X
+X X
+output =BFS : X
+Jalur Terbaik dari X dan X : X
+Jalur Terbaik dari X dan X : X
+
+Case = Kasus Uji 8
+input = 2 1 3
+B A
+B A 1
+A B
+B A
+A A
+output =BFS : B -&gt; A
+Jalur Terbaik dari A dan B : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari B dan A : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari A dan A : A
+
+Case = Kasus Uji 9
+input = 26 50 6
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+A B 100
+B A 100
+B C 100
+C B 100
+C D 100
+D C 100
+D E 100
+E D 100
+E F 100
+F E 100
+F G 100
+G F 100
+G H 100
+H G 100
+H I 100
+I H 100
+I J 100
+J I 100
+J K 100
+K J 100
+K L 100
+L K 100
+L M 100
+M L 100
+M N 100
+N M 100
+N O 100
+O N 100
+O P 100
+P O 100
+P Q 100
+Q P 100
+Q R 100
+R Q 100
+R S 100
+S R 100
+S T 100
+T S 100
+T U 100
+U T 100
+U V 100
+V U 100
+V W 100
+W V 100
+W X 100
+X W 100
+X Y 100
+Y X 100
+Y Z 100
+Z Y 100
+A Z
+Z A
+A M
+N Z
+Z Z
+H T
+output =BFS : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z
+Jalur Terbaik dari A dan Z : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z -&gt; Y -&gt; X -&gt; W -&gt; V -&gt; U -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari Z dan A : Z -&gt; Y -&gt; X -&gt; W -&gt; V -&gt; U -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z
+Jalur Terbaik dari A dan M : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; F -&gt; G -&gt; H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H -&gt; G -&gt; F -&gt; E -&gt; D -&gt; C -&gt; B -&gt; A
+Jalur Terbaik dari N dan Z : N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; U -&gt; V -&gt; W -&gt; X -&gt; Y -&gt; Z -&gt; Y -&gt; X -&gt; W -&gt; V -&gt; U -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N
+Jalur Terbaik dari Z dan Z : Z
+Jalur Terbaik dari H dan T : H -&gt; I -&gt; J -&gt; K -&gt; L -&gt; M -&gt; N -&gt; O -&gt; P -&gt; Q -&gt; R -&gt; S -&gt; T -&gt; S -&gt; R -&gt; Q -&gt; P -&gt; O -&gt; N -&gt; M -&gt; L -&gt; K -&gt; J -&gt; I -&gt; H
+
+Case = Kasus Uji 10
+input = 26 345 20
+G Q X O B F V K J N Z M D I W U A C Y P T L E R S H
+Z E 75
+Z T 90
+I M 40
+E X 31
+B M 80
+C Y 6
+F T 26
+Q E 36
+E H 96
+O M 47
+U D 65
+S Q 99
+P Z 54
+N I 96
+C S 15
+X L 54
+B K 25
+T M 11
+W X 64
+W I 78
+F U 69
+Q L 76
+U V 99
+J Y 99
+V A 45
+I V 43
+E C 76
+H A 36
+I P 35
+K C 72
+W L 57
+R V 27
+L Q 15
+V S 11
+G I 18
+R U 37
+K Z 3
+Y U 7
+I X 48
+T G 31
+T J 25
+P Q 53
+A X 77
+H U 46
+Y P 97
+D B 17
+X W 65
+E T 13
+D K 56
+C K 3
+T N 14
+Q H 10
+O P 35
+N L 64
+M H 43
+C J 52
+W D 96
+K D 76
+G R 30
+H Q 63
+L C 39
+Q F 42
+H P 41
+D Y 44
+O F 63
+S D 64
+M Y 55
+J B 31
+O U 4
+Z L 77
+D W 87
+O Z 77
+L B 33
+C M 78
+S U 81
+E S 61
+R D 21
+W N 90
+D M 99
+C D 63
+W Z 54
+S G 7
+Y F 72
+P M 57
+Y W 65
+C U 91
+G T 50
+C E 50
+T C 37
+A M 6
+G A 34
+K G 59
+G F 98
+X Z 59
+O J 48
+R K 98
+C P 4
+N T 20
+I E 65
+I N 39
+I F 72
+S P 18
+M C 6
+T O 79
+N H 93
+H M 24
+O W 49
+A N 97
+Y N 56
+N Q 24
+B S 97
+E L 20
+N M 31
+W Q 99
+P L 22
+D L 64
+D I 58
+R F 53
+M Z 25
+S K 44
+G U 18
+N F 48
+B C 73
+U L 47
+G Y 81
+T P 72
+Y D 4
+T I 89
+B Z 83
+H L 30
+F J 89
+K I 55
+K M 69
+S C 98
+U S 3
+R X 26
+Z Q 97
+H G 22
+W U 51
+A V 27
+F L 16
+Y X 60
+U G 64
+J V 12
+S F 24
+K P 60
+L G 80
+E P 3
+D G 49
+B F 29
+H Y 68
+W B 35
+O I 77
+B E 92
+P R 60
+L W 77
+V G 81
+C F 59
+D R 38
+L V 88
+I G 83
+U F 82
+I R 90
+E U 100
+N P 83
+A B 11
+F Y 70
+B Q 95
+M E 46
+M P 11
+P V 95
+F P 8
+K H 14
+L H 67
+R E 81
+A Y 84
+X G 69
+B R 96
+Z X 75
+V U 21
+I U 24
+A T 97
+K F 48
+X U 82
+E R 67
+G N 93
+M J 28
+R G 63
+A H 48
+D Q 27
+C I 3
+Q M 16
+Y A 66
+P I 35
+P N 24
+A G 45
+B T 80
+F C 17
+O N 59
+L S 83
+O D 98
+U A 37
+P S 89
+P X 50
+M T 34
+W S 71
+O T 24
+L A 70
+J Z 4
+Z A 49
+S E 97
+E F 27
+F W 85
+A W 61
+E G 45
+J D 15
+K N 89
+M B 30
+J X 76
+T S 69
+A E 59
+W T 38
+Z U 35
+V X 97
+W Y 23
+G D 74
+J S 42
+F A 79
+A P 3
+I H 43
+X F 6
+N O 90
+S I 34
+Z P 19
+Y R 40
+Q W 9
+B D 17
+N G 10
+O G 81
+V W 65
+E O 11
+G K 100
+O Y 65
+L F 60
+R C 46
+M R 94
+C R 22
+Y J 12
+T A 2
+V P 25
+X C 39
+T Z 40
+O Q 46
+X D 77
+X Y 34
+O S 43
+H Z 81
+Q Z 74
+V D 5
+U J 23
+C X 1
+B G 22
+U O 86
+R P 32
+F I 65
+L T 97
+F Z 56
+B Y 53
+V C 50
+S M 34
+V K 42
+S V 36
+X K 47
+R W 70
+F Q 44
+G M 55
+S O 47
+Y V 44
+V N 8
+F D 96
+F K 32
+F E 36
+S W 4
+J L 71
+V O 35
+X Q 26
+L E 71
+L M 78
+M I 80
+E B 42
+C H 16
+Y T 62
+H F 86
+C G 47
+X R 49
+R N 49
+G J 35
+B I 67
+B J 74
+T W 20
+R Q 45
+K O 6
+J M 16
+P J 71
+O V 8
+A Z 41
+N U 73
+A D 26
+B P 1
+Q A 55
+M Q 52
+L P 45
+U Z 25
+R I 60
+R A 60
+H T 5
+Q P 79
+K W 17
+Z Y 42
+X B 34
+D J 68
+U P 12
+U B 77
+V M 7
+I T 7
+D V 36
+V L 17
+C W 41
+H D 18
+T F 94
+Q U 20
+W P 33
+O B 91
+C B 48
+O R 77
+Z C 73
+M G 93
+B U 45
+P G 38
+B N 36
+L U 49
+R B 14
+E D 25
+D Z 90
+Q D 82
+N M
+W L
+A K
+V Y
+N Z
+Y B
+Y C
+M P
+A M
+Z S
+Y R
+R A
+V W
+Q R
+I N
+T V
+U V
+F O
+W O
+A D
+output =BFS : G -&gt; F -&gt; K -&gt; J -&gt; N -&gt; M -&gt; D -&gt; I -&gt; U -&gt; A -&gt; Y -&gt; T -&gt; R -&gt; Q -&gt; Z -&gt; W -&gt; C -&gt; P -&gt; L -&gt; E -&gt; O -&gt; H -&gt; X -&gt; B -&gt; V -&gt; S
+Jalur Terbaik dari N dan M : N -&gt; T -&gt; A -&gt; M -&gt; C -&gt; I -&gt; T -&gt; N
+Jalur Terbaik dari W dan L : W -&gt; P -&gt; L -&gt; Q -&gt; W
+Jalur Terbaik dari A dan K : A -&gt; M -&gt; C -&gt; K -&gt; H -&gt; T -&gt; A
+Jalur Terbaik dari V dan Y : V -&gt; M -&gt; C -&gt; Y -&gt; J -&gt; V
+Jalur Terbaik dari N dan Z : N -&gt; T -&gt; A -&gt; M -&gt; C -&gt; K -&gt; Z -&gt; P -&gt; N
+Jalur Terbaik dari Y dan B : Y -&gt; D -&gt; B -&gt; F -&gt; C -&gt; Y
+Jalur Terbaik dari Y dan C : Y -&gt; J -&gt; M -&gt; C -&gt; Y
+Jalur Terbaik dari M dan P : M -&gt; C -&gt; P -&gt; I -&gt; T -&gt; A -&gt; M
+Jalur Terbaik dari A dan M : A -&gt; M -&gt; C -&gt; I -&gt; T -&gt; A
+Jalur Terbaik dari Z dan S : Z -&gt; U -&gt; S -&gt; W -&gt; Y -&gt; J -&gt; Z
+Jalur Terbaik dari Y dan R : Y -&gt; R -&gt; V -&gt; M -&gt; C -&gt; Y
+Jalur Terbaik dari R dan A : R -&gt; V -&gt; M -&gt; C -&gt; I -&gt; T -&gt; A -&gt; M -&gt; C -&gt; R
+Jalur Terbaik dari V dan W : V -&gt; S -&gt; W -&gt; Y -&gt; J -&gt; V
+Jalur Terbaik dari Q dan R : Q -&gt; M -&gt; C -&gt; R -&gt; Q
+Jalur Terbaik dari I dan N : I -&gt; T -&gt; N -&gt; G -&gt; I
+Jalur Terbaik dari T dan V : T -&gt; A -&gt; V -&gt; M -&gt; C -&gt; I -&gt; T
+Jalur Terbaik dari U dan V : U -&gt; J -&gt; V -&gt; U
+Jalur Terbaik dari F dan O : F -&gt; C -&gt; K -&gt; O -&gt; V -&gt; M -&gt; C -&gt; X -&gt; F
+Jalur Terbaik dari W dan O : W -&gt; T -&gt; A -&gt; M -&gt; C -&gt; K -&gt; O -&gt; U -&gt; S -&gt; W
+Jalur Terbaik dari A dan D : A -&gt; M -&gt; C -&gt; Y -&gt; D -&gt; Q -&gt; H -&gt; T -&gt; A
+
+Case = Kasus Uji 11
+input = 14 26 20
+X Y L K W B F Z T N J R Q A
+J B 39
+Z K 3
+T F 40
+R Q 26
+X Y 84
+R L 5
+N L 3
+A Y 55
+B K 95
+B N 47
+Y N 43
+Q J 26
+X Z 29
+T R 94
+Q W 86
+F R 71
+J F 28
+N W 21
+F Z 30
+B F 100
+W F 26
+J Y 87
+Q Z 79
+K R 6
+K B 85
+Y F 81
+Y F
+A Q
+L A
+L B
+Y N
+N Q
+F Y
+N T
+K N
+Y W
+B W
+N T
+Y Z
+W Y
+Q X
+A W
+X N
+J X
+Y F
+Y A
+output =BFS : X -&gt; Y -&gt; Z -&gt; F -&gt; N -&gt; K -&gt; R -&gt; L -&gt; W -&gt; B -&gt; Q -&gt; J
+Jalur Terbaik dari Y dan F : Y -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari A dan Q : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari L dan A : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari L dan B : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari Y dan N : Y -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari N dan Q : N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; B -&gt; N
+Jalur Terbaik dari F dan Y : F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y -&gt; F
+Jalur Terbaik dari N dan T : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari K dan N : K -&gt; B -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K
+Jalur Terbaik dari Y dan W : Y -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari B dan W : B -&gt; N -&gt; W -&gt; F -&gt; Z -&gt; K -&gt; B
+Jalur Terbaik dari N dan T : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari Y dan Z : Y -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari W dan Y : W -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y -&gt; N -&gt; W
+Jalur Terbaik dari Q dan X : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari A dan W : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari X dan N : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari J dan X : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari Y dan F : Y -&gt; F -&gt; Z -&gt; K -&gt; R -&gt; Q -&gt; J -&gt; Y
+Jalur Terbaik dari Y dan A : Jalur Pergi/Kembali tidak ditemukan!
+</pre
+            >
+          </details>
+        </section>
+        
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const buttons = [...document.querySelectorAll('.nav-link')];
+      const pages = [...document.querySelectorAll('.page')];
+
+      const showPage = (name) => {
+        buttons.forEach((button) => button.classList.toggle('active', button.dataset.page === name));
+        pages.forEach((page) => page.classList.toggle('active', page.id === 'page-' + name));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      buttons.forEach((button) => button.addEventListener('click', () => {
+        history.replaceState(null, '', '#' + button.dataset.page);
+        showPage(button.dataset.page);
+      }));
+
+      const initial = location.hash.slice(1);
+      if (['beranda', 'requested', 'testcase'].includes(initial)) showPage(initial);
+      window.addEventListener('hashchange', () => {
+        const name = location.hash.slice(1);
+        if (['beranda', 'requested', 'testcase'].includes(name)) showPage(name);
+      });
+    })();
+  </script>
+</body>
+</html>

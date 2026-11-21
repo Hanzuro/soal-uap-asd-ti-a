@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Studi Kasus: Rekomendasi Jalur Pergi-Pulang X-Press</title>
+    <style>
+      :root {
+        --navy: #13255a;
+        --blue: #3b5ea8;
+        --orange: #ffaa2b;
+        --sky: #d6ebfa;
+        --mid: #1c5aa8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 16px;
+        background: #eef6fc;
+        color: var(--navy);
+        font:
+          16px/1.6 "Glacial Indifference",
+          "Trebuchet MS",
+          "Segoe UI",
+          Arial,
+          sans-serif;
+      }
+      .wrap {
+        max-width: 900px;
+        margin: auto;
+        background: var(--sky);
+        border: 6px solid var(--blue);
+        border-radius: 18px;
+        outline: 3px solid var(--navy);
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(19, 37, 90, 0.35);
+      }
+      .hero {
+        position: relative;
+        padding: 22px 26% 28px 26px;
+        background: linear-gradient(
+          105deg,
+          var(--navy) 0 74%,
+          var(--orange) 74% 80%,
+          var(--mid) 80% 87%,
+          var(--orange) 87%
+        );
+      }
+      .hero:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 8px;
+        height: 4px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--orange) 0 18px,
+          transparent 18px 36px
+        );
+      }
+      h1 {
+        margin: 0;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 28px;
+        line-height: 1.2;
+      }
+      h1 span {
+        color: var(--orange);
+      }
+      .hero p {
+        margin: 8px 0;
+        color: var(--sky);
+      }
+      .pill {
+        display: inline-block;
+        background: rgba(0, 0, 0, 0.38);
+        color: #fff;
+        border: 2px solid var(--blue);
+        border-radius: 20px;
+        padding: 2px 14px;
+        margin: 4px 6px 0 0;
+        font-size: 14px;
+      }
+      main {
+        padding: 18px 24px 26px;
+      }
+      h2.sec {
+        display: inline-block;
+        margin: 20px 0 -6px 8px;
+        padding: 6px 30px 6px 18px;
+        background: var(--navy);
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 19px;
+        border-left: 8px solid var(--orange);
+        transform: skewX(-12deg);
+        box-shadow: 4px 4px 0 rgba(19, 37, 90, 0.25);
+        position: relative;
+        z-index: 1;
+      }
+      h2.sec span {
+        display: inline-block;
+        transform: skewX(12deg);
+      }
+      .card {
+        background: #fff;
+        border: 3px solid var(--blue);
+        border-radius: 12px;
+        padding: 18px 22px 10px;
+        overflow: hidden;
+      }
+      .card.dark {
+        background: var(--navy);
+        color: #fff;
+      }
+      .card p {
+        text-align: justify;
+        margin: 8px 0;
+      }
+      .card li {
+        margin-bottom: 6px;
+        text-align: justify;
+      }
+      .hl {
+        color: var(--orange);
+        font-weight: bold;
+        text-align: center !important;
+      }
+      hr.sp {
+        border: 0;
+        height: 6px;
+        margin: 22px 0 4px;
+        border-radius: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--orange) 0 22%,
+          var(--navy) 22% 28%,
+          var(--orange) 28%
+        );
+      }
+      code {
+        background: #fff;
+        color: var(--navy);
+        border: 1px solid var(--blue);
+        padding: 0 5px;
+        border-radius: 4px;
+        font:
+          0.92em Consolas,
+          "Courier New",
+          monospace;
+      }
+      pre.cb {
+        background: var(--navy);
+        color: #fff;
+        border-left: 6px solid var(--orange);
+        border-radius: 6px;
+        padding: 10px 12px;
+        margin: 0;
+        font:
+          14px Consolas,
+          "Courier New",
+          monospace;
+        white-space: pre-wrap;
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 8px 0;
+      }
+      th {
+        background: var(--navy);
+        color: #fff;
+        text-align: left;
+      }
+      th,
+      td {
+        border: 1px solid var(--blue);
+        padding: 6px;
+      }
+      .tag {
+        display: inline-block;
+        background: var(--orange);
+        color: var(--navy);
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;
+        padding: 2px 14px;
+        transform: skewX(-12deg);
+        margin-bottom: 6px;
+      }
+      .io {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .io > div {
+        flex: 1 1 300px;
+        min-width: 0;
+      }
+      .ex {
+        overflow: hidden;
+        border-bottom: 2px dashed var(--blue);
+        margin-bottom: 14px;
+        padding-bottom: 6px;
+      }
+      .ex:last-child {
+        border: 0;
+      }
+      .end {
+        text-align: center;
+        margin: 22px 0 0;
+      }
+      .end span {
+        display: inline-block;
+        background: var(--orange);
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 10px 34px;
+        border-radius: 6px;
+        transform: skewX(-12deg);
+        box-shadow: 4px 4px 0 var(--navy);
+      }
+      .poster {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 4px solid var(--blue);
+        border-radius: 10px;
+      }
+      .rimg {
+        float: right;
+        width: 170px;
+        max-width: 34%;
+        height: auto;
+        margin: 0 0 8px 16px;
+      }
+      .rimg.sm {
+        width: 140px;
+      }
+      .mid,
+      .big {
+        width: 150px;
+        height: auto;
+      }
+      .gif {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 6px auto;
+        border-radius: 8px;
+      }
+      @media (max-width: 600px) {
+        .hero {
+          padding-right: 18px;
+        }
+        h1 {
+          font-size: 22px;
+        }
+        main {
+          padding: 14px 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="hero">
+        <h1>Studi Kasus: <span>Jalur Pergi-Pulang</span> X-Press</h1>
+        <p>
+          Randy kurir COD (alias <em>Clash on Delivery</em>) kembali panik:
+          X-Hub-nya error lagi, dan gajinya terus terpotong. Mari kita
+          selamatkan.
+        </p>
+        <div>
+          <span class="pill">08:00</span
+          ><span class="pill">LV 2 RANDY 0/100</span
+          ><span class="pill">Rp1.000.000 / Rp1.000.000</span>
+        </div>
+      </header>
+      <main>
+        <p style="margin: 0 0 6px">
+          <img
+            class="poster"
+            src="img/COD_poster.png"
+            alt="Poster Clash On Delivery: Randy terjepit di tengah kerumunan"
+            width="900"
+          />
+        </p>
+        <h2 class="sec"><span>1. Deskripsi</span></h2>
+        <section class="card dark">
+          <img
+            class="rimg"
+            src="img/Randy_neutral.png"
+            alt="Randy, kurir COD X-Press"
+            width="170"
+            loading="lazy"
+          />
+          <p>
+            Kamu adalah programmer Java yang sebelumnya sudah mengembangkan
+            beberapa program untuk perusahaan ekspedisi
+            <strong>X-Press</strong>. Temanmu, <strong>Randy</strong>, baru
+            diterima sebagai kurir spesialis divisi
+            <strong>Cash On Delivery</strong>. Suatu hari ia datang kalang
+            kabut: aplikasi <strong>X-Hub</strong> miliknya mengalami
+            <em>bug</em> parah!
+          </p>
+          <p>
+            X-Hub merekomendasikan jalur terbaik memakai ADT
+            <em>Graph</em> berbobot. Sebagian jalan hanya bisa dilewati satu
+            arah (proyek galian mangkrak, jalur tikus, dan sebagainya), sehingga
+            setiap jalan dicatat <strong>per arah</strong>. Kurir harus pulang
+            lagi, jadi yang dicari adalah rute
+            <strong>titik pengantaran → tujuan → titik pengantaran</strong>,
+            dengan jalur pergi dan jalur kembali dihitung sendiri-sendiri.
+          </p>
+          <p>
+            Sebelum mencari jalur terbaik, sistem wajib menelusuri semua titik
+            yang bisa dijangkau secara <strong>BFS</strong>.
+          </p>
+          <p style="margin: 8px 0">
+            <img
+              class="gif"
+              src="https://img.itch.zone/aW1nLzI4MzAwNTgxLmdpZg==/original/O%2FfTpJ.gif"
+              alt="Randy mengantar paket"
+              width="430"
+            />
+          </p>
+          <p class="hl">
+            Tugasmu: perbaiki sistem rekomendasi jalur milik Randy yang malang
+            itu!
+          </p>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>2. Definisi</span></h2>
+        <section class="card">
+          <img
+            class="rimg sm"
+            src="img/Randy_Emoji_Default%20Smile.png"
+            alt="Randy tersenyum percaya diri"
+            width="170"
+            loading="lazy"
+          />
+          <ul>
+            <li>
+              <strong>Graph berbobot per arah</strong>:
+              <code>addAdjList(a, b, w)</code> hanya membuat jalan
+              <code>a → b</code> dengan waktu tempuh <code>w</code>. Jalan dua
+              arah ditulis dua kali (bobot boleh berbeda, misalnya karena
+              tanjakan atau macet). Jalan satu arah ditulis sekali.
+            </li>
+            <li>
+              <strong>Jalur pergi</strong> adalah jalur
+              <code>a → b</code> dengan total bobot terkecil.
+              <strong>Jalur kembali</strong> adalah jalur
+              <code>b → a</code> dengan total bobot terkecil. Keduanya dicari
+              terpisah, jadi rutenya bisa berbeda, dan keduanya harus ada.
+            </li>
+            <li>
+              <strong>Indeks vertex</strong> mengikuti urutan masuk ke graph
+              (urutan input), bukan urutan alfabet. Vertex pertama berindeks
+              <code>0</code>.
+            </li>
+            <li>
+              <strong>BFS</strong> dimulai dari vertex berindeks <code>0</code>,
+              mengikuti arah jalan. Tetangga dikunjungi dari
+              <strong>indeks terkecil</strong> ke terbesar. Hanya vertex yang
+              terjangkau yang dicetak.
+            </li>
+            <li>
+              Jalur pergi dan jalur kembali pada setiap query
+              <strong>dijamin tunggal</strong> (tidak ada dua jalur dengan total
+              bobot terkecil yang sama).
+            </li>
+          </ul>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>3. Operasi yang Harus Dibuat</span></h2>
+        <section class="card">
+          <p>
+            Kamu mengisi <code>Graph.java</code> dan
+            <code>Queue.java</code> (keduanya diberikan kosong), serta
+            melengkapi bagian <code>TODO</code> pada <code>Main.java</code>.
+            Rancang atributnya sendiri (disarankan <em>adjacency matrix</em>,
+            maksimum 26 vertex). Kelas <code>Graph</code> wajib memiliki kontrak
+            berikut:
+          </p>
+          <pre class="cb">
+public class Graph {
+    public Graph()                               // konstruktor tanpa parameter
+    public void addVertex(char a)
+    public void addAdjList(char a, b, int bobot)
+    public void bestRoute(char a, char b)
+    public void bfs()
+}</pre
+          >
+          <ol>
+            <li>
+              <code>addVertex(char a)</code>: menambah vertex
+              <code>a</code> pada indeks <code>size</code>, lalu menaikkan
+              <code>size</code>. Jika graph penuh (26 vertex), vertex tidak
+              ditambahkan.
+            </li>
+            <li>
+              <code>addAdjList(char a, char b, int bobot)</code>: membuat jalan
+              <strong>satu arah</strong> <code>a → b</code> berbobot
+              <code>bobot</code>. Jika salah satu vertex belum ada, tambahkan
+              dulu dengan <code>addVertex</code>.
+            </li>
+            <li>
+              <code>bestRoute(char a, char b)</code>: mencari jalur pergi
+              <code>a → b</code> dan jalur kembali <code>b → a</code> dengan
+              <em>algoritma Dijkstra</em> berbasis array (tanpa
+              <em>priority queue</em>), lalu <strong>mencetak</strong> hasilnya
+              satu baris diikuti baris baru. Label
+              <code>Jalur Terbaik dari ... : </code> dicetak oleh
+              <code>Main</code>.
+              <table>
+                <thead>
+                  <tr>
+                    <th>Kondisi</th>
+                    <th>Yang dicetak</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>a</code> dan <code>b</code> sama</td>
+                    <td>Satu vertex saja, contoh <code>C</code></td>
+                  </tr>
+                  <tr>
+                    <td>Jalur pergi <strong>dan</strong> kembali ada</td>
+                    <td>
+                      Rantai pergi-pulang, titik tujuan ditulis sekali, dipisah
+                      <code> -&gt; </code>. Contoh:
+                      <code>A -&gt; B -&gt; E -&gt; D -&gt; A</code>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Salah satunya (atau keduanya) tidak ada</td>
+                    <td><code>Jalur Pergi/Kembali tidak ditemukan!</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </li>
+            <li>
+              <code>bfs()</code>: menelusuri graph secara
+              <strong>Breadth-First</strong> dari indeks <code>0</code> memakai
+              <code>Queue</code> buatanmu sendiri.
+              <ol>
+                <li>
+                  Tandai vertex berindeks <code>0</code> sebagai
+                  <code>visited</code>, cetak, lalu masukkan ke <em>queue</em>.
+                </li>
+                <li>
+                  Selama <em>queue</em> belum kosong, ambil satu vertex
+                  <code>v1</code>.
+                </li>
+                <li>
+                  Kunjungi <strong>semua</strong> tetangga <code>v1</code> yang
+                  belum dikunjungi dari indeks terkecil: tandai
+                  <code>visited</code>, cetak, masukkan ke <em>queue</em>.
+                </li>
+                <li>
+                  Setelah <em>queue</em> kosong, cetak baris baru dan kembalikan
+                  semua <code>visited</code> menjadi <code>false</code>.
+                </li>
+              </ol>
+              Aturan cetak: vertex pertama tanpa awalan, vertex berikutnya
+              diawali <code> -&gt; </code>, tanpa panah atau spasi di akhir
+              baris.
+            </li>
+          </ol>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>4. Format Input dan Output</span></h2>
+        <section class="card">
+          <p><strong>Format Input:</strong></p>
+          <ul>
+            <li>
+              Baris 1: tiga bilangan bulat <code>N M Q</code> (jumlah vertex,
+              jumlah jalan, jumlah query).
+            </li>
+            <li>
+              Baris 2: <em>N</em> vertex dipisahkan spasi,
+              <strong>sesuai urutan penambahan</strong>.
+            </li>
+            <li>
+              Baris 3 sampai <em>M+2</em>: <code>a b bobot</code>, yaitu jalan
+              satu arah dari <code>a</code> ke <code>b</code>.
+            </li>
+            <li>
+              Baris <em>M+3</em> sampai <em>M+Q+2</em>: <code>a b</code>, yaitu
+              titik pengantaran dan titik tujuan.
+            </li>
+          </ul>
+          <p><strong>Format Output:</strong></p>
+          <ul>
+            <li>
+              Baris 1: <code>BFS : </code> diikuti hasil BFS dalam satu baris.
+            </li>
+            <li>
+              Baris 2 sampai <em>Q+1</em>:
+              <code>Jalur Terbaik dari a dan b : </code> diikuti rantai
+              pergi-pulang, atau
+              <code>Jalur Pergi/Kembali tidak ditemukan!</code>.
+            </li>
+          </ul>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>5. Batasan (Constraints)</span></h2>
+        <section class="card">
+          <img
+            class="rimg sm"
+            src="img/Randy_dizzy.png"
+            alt="Randy pusing melihat batasan"
+            width="170"
+            loading="lazy"
+          />
+          <ul>
+            <li>
+              <code>1 ≤ N ≤ 26</code>, <code>0 ≤ M ≤ N(N-1)</code>,
+              <code>1 ≤ Q ≤ 20</code>, bobot <code>1 ≤ w ≤ 100</code>.
+            </li>
+            <li>
+              Vertex berupa <strong>satu huruf kapital</strong> dan unik. Tidak
+              ada <em>self-loop</em> maupun jalan ganda untuk pasangan arah yang
+              sama. Semua vertex pada jalan dan query dijamin terdaftar. Query
+              boleh memakai <code>a</code> sama dengan <code>b</code>.
+            </li>
+            <li>Graph <strong>belum tentu terhubung</strong>.</li>
+            <li>
+              Struktur kelas dipisah ketat menjadi 3 berkas:
+              <code>Graph.java</code>, <code>Queue.java</code>,
+              <code>Main.java</code>.
+            </li>
+            <li>
+              Soal dikerjakan <strong>from scratch</strong>. Dilarang memakai
+              library bawaan Java seperti <code>ArrayList</code>,
+              <code>LinkedList</code>, <code>HashMap</code>,
+              <code>PriorityQueue</code>, <code>java.util.Stack</code>,
+              <code>java.util.Queue</code>, <code>java.util.Arrays</code>, dan
+              <code>java.util.Collections</code>.
+              <code>java.util.Scanner</code> hanya boleh di
+              <code>Main.java</code>.
+            </li>
+            <li>
+              Pastikan output sesuai spesifikasi spasi (<code>BFS : </code>,
+              <code> -&gt; </code>, tanpa spasi tersisa di akhir baris) agar
+              lulus pengujian VPL.
+            </li>
+          </ul>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>6. Contoh Input dan Output</span></h2>
+        <section class="card">
+          <div class="io">
+            <div>
+              <span class="tag">Contoh Input 1</span>
+              <pre class="cb">
+5 10 2
+A B C D E
+A B 2
+B A 3
+A C 6
+C A 4
+B D 3
+D B 6
+C D 1
+D C 2
+D E 4
+E D 6
+A E
+B C</pre
+              >
+            </div>
+            <div>
+              <span class="tag">Contoh Output 1</span>
+              <pre class="cb">
+BFS : A -&gt; B -&gt; C -&gt; D -&gt; E
+Jalur Terbaik dari A dan E : A -&gt; B -&gt; D -&gt; E -&gt; D -&gt; C -&gt; A
+Jalur Terbaik dari B dan C : B -&gt; D -&gt; C -&gt; A -&gt; B</pre
+              >
+            </div>
+          </div>
+          <div class="io">
+            <div>
+              <span class="tag">Contoh Input 2</span>
+              <pre class="cb">
+6 7 3
+S A B C D E
+S A 4
+A B 3
+B A 3
+S C 9
+C B 2
+D E 5
+E D 5
+S B
+S D
+E D</pre
+              >
+            </div>
+            <div>
+              <span class="tag">Contoh Output 2</span>
+              <pre class="cb">
+BFS : S -&gt; A -&gt; C -&gt; B
+Jalur Terbaik dari S dan B : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari S dan D : Jalur Pergi/Kembali tidak ditemukan!
+Jalur Terbaik dari E dan D : E -&gt; D -&gt; E</pre
+              >
+            </div>
+          </div>
+          <div class="io">
+            <div>
+              <span class="tag">Contoh Input 3</span>
+              <pre class="cb">
+5 7 3
+A B C D E
+A E 10
+E A 1
+A B 2
+B C 2
+C D 2
+D E 2
+B D 7
+A E
+C C
+B E</pre
+              >
+            </div>
+            <div>
+              <span class="tag">Contoh Output 3</span>
+              <pre class="cb">
+BFS : A -&gt; B -&gt; E -&gt; C -&gt; D
+Jalur Terbaik dari A dan E : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; A
+Jalur Terbaik dari C dan C : C
+Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
+              >
+            </div>
+          </div>
+        </section>
+        <hr class="sp" />
+        <h2 class="sec"><span>7. Penjelasan Contoh</span></h2>
+        <section class="card">
+          <div class="ex">
+            <p>
+              <strong>Contoh 1</strong> (<code>A B C D E</code> = indeks 0
+              sampai 4)
+            </p>
+            <ul>
+              <li>
+                <strong>BFS</strong>: <code>A</code> mengunjungi
+                <code>B</code> dan <code>C</code> lebih dulu, lalu
+                <code>D</code>, lalu <code>E</code>.
+              </li>
+              <li>
+                Query <code>A E</code>: pergi
+                <code>A -&gt; B -&gt; D -&gt; E</code> berbobot 9. Kembali
+                <code>E -&gt; D -&gt; C -&gt; A</code> berbobot 12. Rute kembali
+                <strong>berbeda</strong> dari rute pergi.
+              </li>
+              <li>
+                Query <code>B C</code>: pergi <code>B -&gt; D -&gt; C</code> =
+                5, kembali <code>C -&gt; A -&gt; B</code> = 6.
+              </li>
+            </ul>
+          </div>
+          <div class="ex">
+            <img
+              class="rimg sm"
+              src="img/Randy_emoji_sad.png"
+              alt="Randy sedih karena jalur tidak ditemukan"
+              width="170"
+              loading="lazy"
+            />
+            <p><strong>Contoh 2</strong> (<code>S A B C D E</code>)</p>
+            <ul>
+              <li>
+                <code>S -&gt; A</code> dan <code>S -&gt; C</code> adalah jalan
+                <strong>satu arah</strong>. <code>D</code> dan
+                <code>E</code> berada di komponen lain sehingga tidak pernah
+                tercetak oleh BFS.
+              </li>
+              <li>
+                Query <code>S B</code>: pergi ada (<code
+                  >S -&gt; A -&gt; B</code
+                >
+                = 7), tetapi kembali tidak ada. Hasilnya
+                <code>Jalur Pergi/Kembali tidak ditemukan!</code>.
+              </li>
+              <li>
+                Query <code>S D</code>: kedua komponen tidak terhubung. Query
+                <code>E D</code>: rantainya <code>E -&gt; D -&gt; E</code>.
+              </li>
+            </ul>
+          </div>
+          <div class="ex">
+            <p><strong>Contoh 3</strong> (<code>A B C D E</code>)</p>
+            <ul>
+              <li>
+                Query <code>A E</code>: jalan langsung
+                <code>A -&gt; E</code> berbobot 10 kalah dari
+                <code>A -&gt; B -&gt; C -&gt; D -&gt; E</code> = 8. Kembali
+                langsung <code>E -&gt; A</code> = 1.
+              </li>
+              <li>
+                Query <code>C C</code>: asal dan tujuan sama, cukup cetak
+                <code>C</code>.
+              </li>
+              <li>
+                Query <code>B E</code>: pergi
+                <code>B -&gt; C -&gt; D -&gt; E</code> = 6, kembali
+                <code>E -&gt; A -&gt; B</code> = 3.
+              </li>
+            </ul>
+          </div>
+        </section>
+        <p class="end">
+          <img
+            class="mid"
+            src="img/Randy_Emoji_Super%20Happy.png"
+            alt="Randy bahagia, gajinya aman"
+            width="150"
+          /><br /><span
+            >Selamat mengerjakan, semoga gaji Randy aman bulan ini!</span
+          >
+        </p>
+      </main>
+    </div>
+  </body>
+</html>
