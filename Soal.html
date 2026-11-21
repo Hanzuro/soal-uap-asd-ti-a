@@ -55,7 +55,7 @@
             arah (proyek galian mangkrak, jalur tikus, dan sebagainya), sehingga
             setiap jalan dicatat <strong>per arah</strong>. Kurir harus pulang
             lagi, jadi yang dicari adalah rute
-            <strong>titik pengantaran -&gt; tujuan -&gt; titik pengantaran</strong>,
+            <strong>titik pengantaran -> tujuan -> titik pengantaran</strong>,
             dengan jalur pergi dan jalur kembali dihitung sendiri-sendiri.
           </p>
           <p>
@@ -89,15 +89,15 @@
             <li>
               <strong>Graph berbobot per arah</strong>:
               <code>addAdjList(a, b, w)</code> hanya membuat jalan
-              <code>a -&gt; b</code> dengan waktu tempuh <code>w</code>. Jalan dua
+              <code>a -> b</code> dengan waktu tempuh <code>w</code>. Jalan dua
               arah ditulis dua kali (bobot boleh berbeda, misalnya karena
               tanjakan atau macet). Jalan satu arah ditulis sekali.
             </li>
             <li>
               <strong>Jalur pergi</strong> adalah jalur
-              <code>a -&gt; b</code> dengan total bobot terkecil.
+              <code>a -> b</code> dengan total bobot terkecil.
               <strong>Jalur kembali</strong> adalah jalur
-              <code>b -&gt; a</code> dengan total bobot terkecil. Keduanya dicari
+              <code>b -> a</code> dengan total bobot terkecil. Keduanya dicari
               terpisah, jadi rutenya bisa berbeda, dan keduanya harus ada.
             </li>
             <li>
@@ -148,13 +148,13 @@ public class Graph {
             </li>
             <li>
               <code>addAdjList(char a, char b, int bobot)</code>: membuat jalan
-              <strong>satu arah</strong> <code>a -&gt; b</code> berbobot
+              <strong>satu arah</strong> <code>a -> b</code> berbobot
               <code>bobot</code>. Jika salah satu vertex belum ada, tambahkan
               dulu dengan <code>addVertex</code>.
             </li>
             <li>
               <code>bestRoute(char a, char b)</code>: mencari jalur pergi
-              <code>a -&gt; b</code> dan jalur kembali <code>b -&gt; a</code> dengan
+              <code>a -> b</code> dan jalur kembali <code>b -> a</code> dengan
               <em>algoritma Dijkstra</em> berbasis array (tanpa
               <em>priority queue</em>), lalu <strong>mencetak</strong> hasilnya
               satu baris diikuti baris baru. Label
@@ -176,8 +176,8 @@ public class Graph {
                     <td>Jalur pergi <strong>dan</strong> kembali ada</td>
                     <td>
                       Rantai pergi-pulang, titik tujuan ditulis sekali, dipisah
-                      <code> -&gt; </code>. Contoh:
-                      <code>A -&gt; B -&gt; E -&gt; D -&gt; A</code>
+                      <code> -> </code>. Contoh:
+                      <code>A -> B -> E -> D -> A</code>
                     </td>
                   </tr>
                   <tr>
@@ -211,7 +211,7 @@ public class Graph {
                 </li>
               </ol>
               Aturan cetak: vertex pertama tanpa awalan, vertex berikutnya
-              diawali <code> -&gt; </code>, tanpa panah atau spasi di akhir
+              diawali <code> -> </code>, tanpa panah atau spasi di akhir
               baris.
             </li>
           </ol>
@@ -290,7 +290,7 @@ public class Graph {
             </li>
             <li>
               Pastikan output sesuai spesifikasi spasi (<code>BFS : </code>,
-              <code> -&gt; </code>, tanpa spasi tersisa di akhir baris) agar
+              <code> -> </code>, tanpa spasi tersisa di akhir baris) agar
               lulus pengujian VPL.
             </li>
           </ul>
@@ -321,9 +321,9 @@ B C</pre
             <div>
               <span class="tag">Contoh Output 1</span>
               <pre class="cb">
-BFS : A -&gt; B -&gt; C -&gt; D -&gt; E
-Jalur Terbaik dari A dan E : A -&gt; B -&gt; D -&gt; E -&gt; D -&gt; C -&gt; A
-Jalur Terbaik dari B dan C : B -&gt; D -&gt; C -&gt; A -&gt; B</pre
+BFS : A -> B -> C -> D -> E
+Jalur Terbaik dari A dan E : A -> B -> D -> E -> D -> C -> A
+Jalur Terbaik dari B dan C : B -> D -> C -> A -> B</pre
               >
             </div>
           </div>
@@ -348,10 +348,10 @@ E D</pre
             <div>
               <span class="tag">Contoh Output 2</span>
               <pre class="cb">
-BFS : S -&gt; A -&gt; C -&gt; B
+BFS : S -> A -> C -> B
 Jalur Terbaik dari S dan B : Jalur Pergi/Kembali tidak ditemukan!
 Jalur Terbaik dari S dan D : Jalur Pergi/Kembali tidak ditemukan!
-Jalur Terbaik dari E dan D : E -&gt; D -&gt; E</pre
+Jalur Terbaik dari E dan D : E -> D -> E</pre
               >
             </div>
           </div>
@@ -376,10 +376,10 @@ B E</pre
             <div>
               <span class="tag">Contoh Output 3</span>
               <pre class="cb">
-BFS : A -&gt; B -&gt; E -&gt; C -&gt; D
-Jalur Terbaik dari A dan E : A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; A
+BFS : A -> B -> E -> C -> D
+Jalur Terbaik dari A dan E : A -> B -> C -> D -> E -> A
 Jalur Terbaik dari C dan C : C
-Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
+Jalur Terbaik dari B dan E : B -> C -> D -> E -> A -> B</pre
               >
             </div>
           </div>
@@ -401,17 +401,17 @@ Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
               </li>
               <li>
                 Query <code>A E</code>: pergi
-                <code>A -&gt; B -&gt; D -&gt; E</code> berbobot 2 + 3 + 4 = 9
-                (lebih murah dari <code>A -&gt; C -&gt; D -&gt; E</code> = 11).
-                Kembali <code>E -&gt; D -&gt; C -&gt; A</code> berbobot 6 + 2 +
+                <code>A -> B -> D -> E</code> berbobot 2 + 3 + 4 = 9
+                (lebih murah dari <code>A -> C -> D -> E</code> = 11).
+                Kembali <code>E -> D -> C -> A</code> berbobot 6 + 2 +
                 4 = 12 (lebih murah dari
-                <code>E -&gt; D -&gt; B -&gt; A</code> = 15). Rute kembali
+                <code>E -> D -> B -> A</code> = 15). Rute kembali
                 <strong>berbeda</strong> dari rute pergi.
               </li>
               <li>
-                Query <code>B C</code>: pergi <code>B -&gt; D -&gt; C</code> =
-                5, kembali <code>C -&gt; A -&gt; B</code> = 4 + 2 = 6 (lebih
-                murah dari <code>C -&gt; D -&gt; B</code> = 7).
+                Query <code>B C</code>: pergi <code>B -> D -> C</code> =
+                5, kembali <code>C -> A -> B</code> = 4 + 2 = 6 (lebih
+                murah dari <code>C -> D -> B</code> = 7).
               </li>
             </ul>
           </div>
@@ -427,14 +427,14 @@ Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
             <div class="viz" data-src="in2"></div>
             <ul>
               <li>
-                <code>S -&gt; A</code> dan <code>S -&gt; C</code> adalah jalan
+                <code>S -> A</code> dan <code>S -> C</code> adalah jalan
                 <strong>satu arah</strong>. <code>D</code> dan
                 <code>E</code> berada di komponen lain sehingga tidak pernah
                 tercetak oleh BFS.
               </li>
               <li>
                 Query <code>S B</code>: pergi ada (<code
-                  >S -&gt; A -&gt; B</code
+                  >S -> A -> B</code
                 >
                 = 7), tetapi kembali tidak ada karena tidak ada jalan menuju
                 <code>S</code>. Hasilnya
@@ -443,7 +443,7 @@ Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
               <li>
                 Query <code>S D</code>: kedua komponen tidak terhubung. Query
                 <code>E D</code>: pergi 5 dan kembali 5, rantainya
-                <code>E -&gt; D -&gt; E</code>.
+                <code>E -> D -> E</code>.
               </li>
             </ul>
           </div>
@@ -454,9 +454,9 @@ Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
               <li>
                 Jalur dengan total bobot terkecil belum tentu punya vertex
                 paling sedikit. Query <code>A E</code>: jalan langsung
-                <code>A -&gt; E</code> berbobot 10 kalah dari
-                <code>A -&gt; B -&gt; C -&gt; D -&gt; E</code> = 8. Kembali
-                langsung <code>E -&gt; A</code> = 1.
+                <code>A -> E</code> berbobot 10 kalah dari
+                <code>A -> B -> C -> D -> E</code> = 8. Kembali
+                langsung <code>E -> A</code> = 1.
               </li>
               <li>
                 Query <code>C C</code>: asal dan tujuan sama, cukup cetak
@@ -464,9 +464,9 @@ Jalur Terbaik dari B dan E : B -&gt; C -&gt; D -&gt; E -&gt; A -&gt; B</pre
               </li>
               <li>
                 Query <code>B E</code>: pergi
-                <code>B -&gt; C -&gt; D -&gt; E</code> = 6 (lebih murah dari
-                <code>B -&gt; D -&gt; E</code> = 9), kembali
-                <code>E -&gt; A -&gt; B</code> = 3.
+                <code>B -> C -> D -> E</code> = 6 (lebih murah dari
+                <code>B -> D -> E</code> = 9), kembali
+                <code>E -> A -> B</code> = 3.
               </li>
             </ul>
           </div>
