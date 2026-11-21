@@ -497,7 +497,11 @@ details.tc summary small {
   background: #eaf3fb;
   color: var(--navy);
   padding: 7px 16px;
-  font: bold 14px "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+  font:
+    bold 14px "Trebuchet MS",
+    "Segoe UI",
+    Arial,
+    sans-serif;
   cursor: pointer;
 }
 .nav-link:hover,
