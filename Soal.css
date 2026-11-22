@@ -359,12 +359,6 @@ td {
   main {
     padding: 14px 10px;
   }
-  .navbar {
-    justify-content: center;
-  }
-  .nav-link {
-    flex: 1 1 140px;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   * {
@@ -406,7 +400,7 @@ td {
   animation: bob 3.2s ease-in-out infinite;
 }
 .gif {
-  display: block;
+    display: block;
   max-width: 100%;
   height: auto;
   margin: 6px auto;
@@ -414,14 +408,14 @@ td {
 }
 @keyframes bob {
   50% {
-    transform: translateY(-5px);
-  }
+      transform: translateY(-5px);
+    }
 }
 .tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 12px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 12px 0 0;
 }
 .tabs button {
   background: #e6f0fb;
@@ -449,69 +443,42 @@ td {
   margin-top: 0;
 }
 details.tc {
-  border: 2px solid var(--blue);
-  border-radius: 10px;
-  margin: 10px 0;
-  background: #f3f8fd;
-  padding: 0 12px 8px;
+    border: 2px solid var(--blue);
+    border-radius: 10px;
+    margin: 10px 0;
+    background: #f3f8fd;
+    padding: 0 12px 8px;
 }
 details.tc summary {
-  cursor: pointer;
-  font-weight: bold;
-  padding: 8px 0;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px 0;
 }
 details.tc summary small {
-  font-weight: normal;
+    font-weight: normal;
   opacity: 0.75;
   margin-left: 6px;
 }
 .lv {
-  display: inline-block;
-  background: var(--orange);
-  color: var(--navy);
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  padding: 0 10px;
-  transform: skewX(-12deg);
-  margin-right: 6px;
+    display: inline-block;
+    background: var(--orange);
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 0 10px;
+    transform: skewX(-12deg);
+    margin-right: 6px;
 }
 .tc pre.cb {
-  max-height: 300px;
-  overflow: auto;
+    max-height: 300px;
+    overflow: auto;
 }
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 8px 12px;
-  background: #fff;
-  border-bottom: 3px solid var(--orange);
-}
-.nav-link {
-  border: 2px solid var(--blue);
-  border-radius: 8px;
-  background: #eaf3fb;
-  color: var(--navy);
-  padding: 7px 16px;
-  font:
-    bold 14px "Trebuchet MS",
-    "Segoe UI",
-    Arial,
-    sans-serif;
-  cursor: pointer;
-}
-.nav-link:hover,
-.nav-link.active {
-  background: var(--navy);
-  color: #fff;
-}
-.page {
-  display: none;
-}
-.page.active {
+.finale {
   display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 10px;
+  animation: bob 3.2s ease-in-out infinite;
 }
